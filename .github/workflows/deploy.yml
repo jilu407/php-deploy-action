@@ -2,26 +2,32 @@ name: remote ssh command
 on: [push]
 jobs:
 
-  build:
-    name: Build
-    runs-on: ubuntu-latest
-    steps:
-    - name: checkout
-      uses: actions/checkout@v1
+  deploy:
 
-    - name: executing remote ssh commands using password
-      uses: appleboy/ssh-action@
+  runs-on: ubuntu-latest
+
+  steps:
+
+    - name: Checkout
+
+      uses: actions/checkout@v2
+
+    - name: Deployment
+
+      uses: appleboy/ssh-action@main
+
       with:
+
         host: ${{ secrets.SSH_HOST }}
+
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+
         username: ${{ secrets.SSH_USERNAME }}
-        password: ${{ secrets.SSH_PRIVATE_KEY }}
-        port: ${{ secrets.PORT }}
-        
+
         script: |
 
           cd /var/www/html/
 
           git checkout -f 
 
-          git pull origin master
-
+          git pull
